@@ -7,8 +7,9 @@ type Props = {
 }
 
 export const ProjectCard = memo(({ project, onOpen }: Props) => {
+  const hasThumb = Boolean(project.thumb)
   return (
-    <button type="button" className="project-card" onClick={onOpen} aria-label={`Open ${project.title}`}>
+    <button type="button" className={`project-card ${!hasThumb ? 'placeholder-frame' : ''}`} onClick={onOpen} aria-label={`Open ${project.title}`}>
       {project.thumb ? (
         <img className="project-thumb" src={project.thumb} alt="" loading="lazy" decoding="async" />
       ) : (

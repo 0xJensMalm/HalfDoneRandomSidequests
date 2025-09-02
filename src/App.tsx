@@ -1,19 +1,20 @@
 import { useMemo, useState } from 'react'
-import { projects } from './data/projects'
+import { getCatalog } from './data/catalog'
+import type { Project } from './data/projects'
 import { ProjectCard } from './components/ProjectCard'
-import { ProjectModal } from './components/ProjectModal'
+import { ProjectModal } from './components/ProjectModal.tsx'
 import { BackgroundFlock } from './components/BackgroundFlock'
 import { ParticleControls } from './components/ParticleControls'
 
 function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
 
-  const gridColumns = useMemo(() => {
-    const n = Math.ceil(Math.sqrt(projects.length))
-    return n
-  }, [])
-
-  const selected = useMemo(() => projects.find(p => p.id === selectedId) || null, [selectedId])
+  const gridColumns = 4 // change to 6 for 6x6
+  const items = useMemo(() => getCatalog(gridColumns), [gridColumns])
+  const selected = useMemo<Project | null>(() => {
+    const found = items.find((it): it is Project => 'title' in it && it.id === selectedId)
+    return found ?? null
+  }, [items, selectedId])
 
   return (
     <div className="app-shell">
@@ -29,9 +30,15 @@ function App() {
           className="square-grid"
           style={{ gridTemplateColumns: `repeat(${gridColumns}, 1fr)` }}
         >
-          {projects.map(project => (
-            <div className="card-cell" key={project.id}>
-              <ProjectCard project={project} onOpen={() => setSelectedId(project.id)} />
+          {items.map(item => (
+            <div className="card-cell" key={item.id}>
+              {'placeholder' in item ? (
+                <div className="project-card placeholder-frame">
+                  <div className="project-thumb placeholder-x" />
+                </div>
+              ) : (
+                <ProjectCard project={item} onOpen={() => setSelectedId(item.id)} />
+              )}
             </div>
           ))}
         </div>
