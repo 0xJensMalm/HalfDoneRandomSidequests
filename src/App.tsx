@@ -3,6 +3,8 @@ import { projects } from './data/projects'
 import { ProjectCard } from './components/ProjectCard'
 import { ProjectModal } from './components/ProjectModal'
 import { ThemeSwitcher } from './components/ThemeSwitcher'
+import { BackgroundFlock } from './components/BackgroundFlock'
+import { ParticleControls } from './components/ParticleControls'
 
 function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -16,6 +18,7 @@ function App() {
 
   return (
     <div className="app-shell">
+      <BackgroundFlock />
       <div className="title-wrap">
         <div className="title-box">
           <div className="title-main">KromoRepo</div>
@@ -37,6 +40,7 @@ function App() {
       </main>
 
       <ThemeSwitcher />
+      <ParticleControls />
 
       {selected && (
         <ProjectModal
