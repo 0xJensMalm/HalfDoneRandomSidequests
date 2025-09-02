@@ -6,7 +6,7 @@ type Particle = {
   p: Vec
   v: Vec
   color: string
-  shape: 'circle' | 'square' | 'triangle'
+  shape: 'dot' | 'circle' | 'x' | 'arrow'
   size: number
 }
 
@@ -33,7 +33,7 @@ export function BackgroundFlock() {
       const v = getComputedStyle(document.documentElement).getPropertyValue(name)
       return v?.trim() || fallback
     }
-    const palette = [
+    let palette = [
       readVar('--accent', '#8d6bff'),
       readVar('--accent-2', '#00d4ff'),
       readVar('--accent-3', '#ff6ad5'),
@@ -51,13 +51,11 @@ export function BackgroundFlock() {
       particlesRef.current = []
     }
 
-    let settings: ParticleSettings = particleSettings.get()
-
-    const spawnFromEdge = (dt: number) => {
+    const spawnFromEdge = (dt: number, settings: ParticleSettings) => {
       const w = canvas.clientWidth
       const h = canvas.clientHeight
       const count = (settings.spawnRate * dt) | 0
-      const shapes: Particle['shape'][] = ['circle', 'square', 'triangle']
+      const shapes: Particle['shape'][] = ['dot', 'circle', 'x', 'arrow']
       for (let i = 0; i < count; i++) {
         const side = Math.floor(Math.random() * 4)
         let x = 0, y = 0
@@ -98,8 +96,11 @@ export function BackgroundFlock() {
       const h = canvas.clientHeight
       const particles = particlesRef.current
 
+      // Read current settings each frame (ensures controls are responsive)
+      const s = particleSettings.get()
+
       // Trail clear
-      ctx.fillStyle = `rgba(0,0,0,${Math.max(0, Math.min(1, 1 - settings.trail))})`
+      ctx.fillStyle = `rgba(0,0,0,${Math.max(0, Math.min(1, 1 - s.trail))})`
       ctx.fillRect(0, 0, w, h)
 
       // Spawn
@@ -107,7 +108,13 @@ export function BackgroundFlock() {
       const last = (tick as any)._t || now
       const dt = Math.max(0, Math.min(0.05, (now - last) / 1000))
       ;(tick as any)._t = now
-      spawnFromEdge(dt)
+      // Update palette live so theme changes affect particles
+      palette = [
+        readVar('--accent', palette[0]),
+        readVar('--accent-2', palette[1]),
+        readVar('--accent-3', palette[2]),
+      ]
+      spawnFromEdge(dt, s)
 
       const mouse = mouseRef.current
 
@@ -123,19 +130,33 @@ export function BackgroundFlock() {
         ctx.save()
         ctx.translate(p.p.x, p.p.y)
         ctx.fillStyle = p.color
-        switch (p.shape) {
+        switch (particleSettings.get().shape) {
+          case 'dot':
+            ctx.fillRect(-p.size * 0.6, -p.size * 0.6, p.size * 1.2, p.size * 1.2)
+            break
           case 'circle':
             ctx.beginPath(); ctx.arc(0, 0, p.size, 0, Math.PI * 2); ctx.fill();
             break
-          case 'square':
-            ctx.fillRect(-p.size, -p.size, p.size * 2, p.size * 2)
+          case 'x':
+            ctx.beginPath()
+            const s = p.size * 1.6
+            ctx.moveTo(-s, -s); ctx.lineTo(s, s)
+            ctx.moveTo(-s, s); ctx.lineTo(s, -s)
+            ctx.strokeStyle = p.color
+            ctx.lineWidth = Math.max(1, p.size * 0.6)
+            ctx.stroke()
             break
-          case 'triangle':
-            ctx.beginPath();
-            ctx.moveTo(0, -p.size * 1.4)
-            ctx.lineTo(-p.size, p.size)
-            ctx.lineTo(p.size, p.size)
-            ctx.closePath(); ctx.fill();
+          case 'arrow':
+            // Rotate to direction of travel
+            const ang = Math.atan2(p.v.y, p.v.x)
+            ctx.rotate(ang)
+            const a = p.size * 2.2
+            ctx.beginPath()
+            ctx.moveTo(-a * 0.8, -a * 0.4)
+            ctx.lineTo(-a * 0.8, a * 0.4)
+            ctx.lineTo(a * 0.9, 0)
+            ctx.closePath()
+            ctx.fill()
             break
         }
         ctx.restore()
@@ -145,7 +166,6 @@ export function BackgroundFlock() {
     }
 
     const onResize = () => resize()
-    const unsub = particleSettings.subscribe((s) => { settings = s })
 
     resize()
     window.addEventListener('resize', onResize)
@@ -160,7 +180,6 @@ export function BackgroundFlock() {
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('mouseleave', onMouseLeave)
       window.removeEventListener('click', onBackdropClick)
-      unsub()
     }
   }, [])
 

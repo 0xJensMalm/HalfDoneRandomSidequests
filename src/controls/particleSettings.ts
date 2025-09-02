@@ -5,6 +5,7 @@ export type ParticleSettings = {
   sizeMin: number
   sizeMax: number
   trail: number
+  shape: 'dot' | 'circle' | 'x' | 'arrow'
 }
 
 type Listener = (s: ParticleSettings) => void
@@ -16,6 +17,7 @@ const defaults: ParticleSettings = {
   sizeMin: 1,
   sizeMax: 2.5,
   trail: 0.15, // 0 = hard clear, 1 = no clear
+  shape: 'dot',
 }
 
 let current: ParticleSettings = { ...defaults }

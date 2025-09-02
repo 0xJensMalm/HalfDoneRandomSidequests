@@ -9,8 +9,10 @@ type Props = {
 export const ProjectCard = memo(({ project, onOpen }: Props) => {
   return (
     <button type="button" className="project-card" onClick={onOpen} aria-label={`Open ${project.title}`}>
-      {project.thumb && (
-        <img className="project-thumb" src={project.thumb} alt="" />
+      {project.thumb ? (
+        <img className="project-thumb" src={project.thumb} alt="" loading="lazy" decoding="async" />
+      ) : (
+        <div className="project-thumb placeholder-x" />
       )}
       <div className="project-overlay" />
       <div className="project-meta">

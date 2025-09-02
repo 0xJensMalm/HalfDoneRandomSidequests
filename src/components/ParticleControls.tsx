@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { particleSettings } from '../controls/particleSettings'
+import { themes, applyTheme } from '../theme/themes'
 
 export function ParticleControls() {
   const [open, setOpen] = useState(false)
@@ -11,9 +12,11 @@ export function ParticleControls() {
 
   const set = (k: keyof typeof local) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const v = Number(e.target.value)
-    const next = { ...local, [k]: v }
-    setLocal(next)
     particleSettings.set({ [k]: v })
+  }
+
+  const setShape = (shape: typeof local.shape) => () => {
+    particleSettings.set({ shape })
   }
 
   return (
@@ -40,7 +43,22 @@ export function ParticleControls() {
             <label>Trail {local.trail.toFixed(2)}
               <input type="range" min={0} max={0.9} step={0.01} value={local.trail} onChange={set('trail')} />
             </label>
-            <button className="pill small" onClick={() => particleSettings.reset()}>Reset</button>
+            <div className="shape-row">
+              <button type="button" className={`pill small ${local.shape === 'dot' ? 'primary' : ''}`} onClick={setShape('dot')}>•</button>
+              <button type="button" className={`pill small ${local.shape === 'circle' ? 'primary' : ''}`} onClick={setShape('circle')}>○</button>
+              <button type="button" className={`pill small ${local.shape === 'x' ? 'primary' : ''}`} onClick={setShape('x')}>×</button>
+              <button type="button" className={`pill small ${local.shape === 'arrow' ? 'primary' : ''}`} onClick={setShape('arrow')}>➤</button>
+            </div>
+            <div className="shape-row">
+              {themes.map((t, i) => (
+                <button key={t.name} type="button" className="swatch" onClick={() => applyTheme(i)}
+                  title={t.name}
+                  style={{ background: `conic-gradient(${t.accent}, ${t.accent2}, ${t.accent3}, ${t.accent})`, borderColor: '#000' }} />
+              ))}
+            </div>
+            <div className="controls-row">
+              <button type="button" className="pill small" onClick={() => particleSettings.reset()}>Reset</button>
+            </div>
           </div>
         </div>
       )}

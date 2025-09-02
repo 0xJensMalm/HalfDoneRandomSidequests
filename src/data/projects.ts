@@ -12,30 +12,32 @@ export type Project = {
 }
 
 const placeholder = 'https://picsum.photos/seed/'
+import miningImg from '../assets/projects/MiningTycoon.png'
+import bioImg from '../assets/projects/BioSim.png'
 
 export const projects: Project[] = [
   {
     id: 'p1',
-    title: 'Voxel Garden',
-    description: 'Procedural voxel terrain with WebGL and chunk meshing experiments.',
-    category: 'Graphics',
-    completion: 45,
+    title: 'Mining Corporation Tycoon',
+    description: 'Mining Corporation Tycoon is a retro‑flavored browser sim where you turn a gritty mine into a thriving operation through smart staffing, safety, and upgrades. Start each day with a fax‑style Morning Brief, then assign crews and tools to depth‑gated veins while balancing wages, morale, and risk. A probabilistic shift engine models production and hazards, and a Warehouse hub offers upgrade trees: Infrastructure (depth, electricity, ventilation, pumps, lighting), Tools, Storage, Health & Safety, and Business Intelligence. Depth unlocks new minerals, BI sharpens market timing, and post‑shift reports guide your next moves.',
+    category: 'Game',
+    completion: 60,
     updated: '2025-09-01',
-    thumb: `${placeholder}vox1/400/400`,
-    screenshot: `${placeholder}vox1/1200/800`,
-    launchUrl: 'https://example.com/voxel',
+    thumb: miningImg,
+    screenshot: miningImg,
+    launchUrl: 'https://mining-corporation-simulator.vercel.app',
     repoUrl: 'https://github.com/kromo/voxel-garden',
   },
   {
     id: 'p2',
-    title: 'Flowboard',
+    title: 'BioSim',
     description: 'Realtime kanban with CRDT sync for offline-first collaboration.',
-    category: 'Productivity',
-    completion: 70,
+    category: 'Simulation',
+    completion: 80,
     updated: '2025-08-20',
-    thumb: `${placeholder}flow/400/400`,
-    screenshot: `${placeholder}flow/1200/800`,
-    launchUrl: 'https://example.com/flowboard',
+    thumb: bioImg,
+    screenshot: bioImg,
+    launchUrl: 'https://bio-chi-drab.vercel.app',
     repoUrl: 'https://github.com/kromo/flowboard',
   },
   {

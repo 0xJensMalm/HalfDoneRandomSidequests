@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react'
 import { projects } from './data/projects'
 import { ProjectCard } from './components/ProjectCard'
 import { ProjectModal } from './components/ProjectModal'
-import { ThemeSwitcher } from './components/ThemeSwitcher'
 import { BackgroundFlock } from './components/BackgroundFlock'
 import { ParticleControls } from './components/ParticleControls'
 
@@ -21,8 +20,7 @@ function App() {
       <BackgroundFlock />
       <div className="title-wrap">
         <div className="title-box">
-          <div className="title-main">KromoRepo</div>
-          <div className="title-sub">Half done, random sidequests.</div>
+          <div className="title-main">Half done, random sidequests.</div>
         </div>
       </div>
 
@@ -39,7 +37,6 @@ function App() {
         </div>
       </main>
 
-      <ThemeSwitcher />
       <ParticleControls />
 
       {selected && (
