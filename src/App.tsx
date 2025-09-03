@@ -21,7 +21,8 @@ function App() {
       <BackgroundFlock />
       <div className="title-wrap">
         <div className="title-box">
-          <div className="title-main">Half done, random sidequests.</div>
+          <div className="title-main">Half done,</div>
+          <div className="title-sub">random sidequests</div>
         </div>
       </div>
 

@@ -30,7 +30,10 @@ export const particleSettings = {
     for (const l of listeners) l(current)
   },
   reset() { this.set(defaults) },
-  subscribe(l: Listener) { listeners.add(l); return () => listeners.delete(l) },
+  subscribe(l: Listener) {
+    listeners.add(l)
+    return () => { listeners.delete(l) }
+  },
 }
 
 

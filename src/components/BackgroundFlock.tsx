@@ -10,14 +10,7 @@ type Particle = {
   size: number
 }
 
-function length(v: Vec) { return Math.hypot(v.x, v.y) }
-function limit(v: Vec, max: number) {
-  const m = length(v)
-  if (m > max && m > 0) { v.x = (v.x / m) * max; v.y = (v.y / m) * max }
-}
-function sub(a: Vec, b: Vec): Vec { return { x: a.x - b.x, y: a.y - b.y } }
-function addIn(a: Vec, b: Vec) { a.x += b.x; a.y += b.y }
-function mulIn(a: Vec, s: number) { a.x *= s; a.y *= s }
+// no-op helpers removed; shooter system doesn't need vector helpers
 
 export function BackgroundFlock() {
   const ref = useRef<HTMLCanvasElement | null>(null)
@@ -99,8 +92,10 @@ export function BackgroundFlock() {
       // Read current settings each frame (ensures controls are responsive)
       const s = particleSettings.get()
 
-      // Trail clear
-      ctx.fillStyle = `rgba(0,0,0,${Math.max(0, Math.min(1, 1 - s.trail))})`
+      // Trail clear using themed background
+      const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#000'
+      const alpha = Math.max(0, Math.min(1, 1 - s.trail))
+      ctx.fillStyle = bg.startsWith('#') ? `${bg}${Math.round(alpha * 255).toString(16).padStart(2,'0')}` : `rgba(0,0,0,${alpha})`
       ctx.fillRect(0, 0, w, h)
 
       // Spawn
@@ -115,8 +110,6 @@ export function BackgroundFlock() {
         readVar('--accent-3', palette[2]),
       ]
       spawnFromEdge(dt, s)
-
-      const mouse = mouseRef.current
 
       // Integrate and draw
       for (let i = particles.length - 1; i >= 0; i--) {

@@ -16,7 +16,7 @@
   font-weight: 450;
   color-scheme: dark;
   color: var(--text);
-  background: #000;
+  background: var(--bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -112,7 +112,8 @@ button:active { transform: translateY(0); }
   transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
   box-shadow: 0 6px 16px rgba(0,0,0,0.35);
 }
-.placeholder-frame { background: rgba(0,0,0,0.85); border-color: #000; }
+.placeholder-frame { background: #000; border-color: #000; }
+.placeholder-frame:hover { transform: none; border-color: #000; }
 .project-card:hover { transform: translateY(-3px); border-color: var(--accent); }
 
 .project-thumb {

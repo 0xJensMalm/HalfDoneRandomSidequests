@@ -31,7 +31,7 @@ export const projects: Project[] = [
   {
     id: 'p2',
     title: 'BioSim',
-    description: 'Realtime kanban with CRDT sync for offline-first collaboration.',
+    description: 'A simulation that simulates the balance between bacterial growth and food availability.',
     category: 'Simulation',
     completion: 80,
     updated: '2025-08-20',

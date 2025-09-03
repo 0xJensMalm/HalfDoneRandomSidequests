@@ -7,12 +7,15 @@ export function ParticleControls() {
   const [local, setLocal] = useState(particleSettings.get())
 
   useEffect(() => {
-    return particleSettings.subscribe(setLocal)
+    const unsub = particleSettings.subscribe(setLocal)
+    return () => { unsub() }
   }, [])
 
   const set = (k: keyof typeof local) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const v = Number(e.target.value)
     particleSettings.set({ [k]: v })
+    // Also update local mirror so UI reflects immediately
+    setLocal(prev => ({ ...prev, [k]: v }))
   }
 
   const setShape = (shape: typeof local.shape) => () => {
